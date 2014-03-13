@@ -3,7 +3,7 @@
 	<head>
 		<title>PhatWallet</title>
 
-		<!-- Scripts -->
+		<!-- Scripts
 
 		<script language="javascript" type="text/javascript" src="../js/dist/jquery.min.js"></script>
 		<script language="javascript" type="text/javascript" src="../js/dist/jquery.jqplot.min.js"></script>
@@ -33,6 +33,58 @@
 				  );
 			});
 		</script>
+	-->
+
+		<script type="text/javascript">
+		window.onload = draw; //Executes draw function when ready
+		function draw(){
+			//Assign canvas element to variable
+			var canvas = document.getElementById("chart1");
+
+			//Check to see if canvas is supported ins user broswer
+			if(canvas.getContext) {
+				//Create the HTML5 context object to enable draw methods
+				var ctx = canvas.getContext("2d");
+
+				//Rectangle
+				ctx.fillStyle = "rgba(0,200,0,1)"; //Fill color
+				ctx.fillRect(30,10,20,10);
+
+				//Line 1
+				ctx.beginPath();
+				ctx.moveTo(100,50);
+				ctx.lineTo(130,100);
+				ctx.lineTo(70,100);
+				ctx.fill();
+
+				//Line 2
+				ctx.beginPath();
+				ctx.moveTo(72,60);
+				ctx.lineTo(85,72);
+				ctx.lineTo(71,94);
+				ctx.lineTo(50,70);
+				ctx.lineTo(65,40);
+				ctx.stroke();
+
+				//Line 3
+				ctx.beginPath();
+				ctx.moveTo(128,60);
+				ctx.lineTo(115,72);
+				ctx.lineTo(129,94);
+				ctx.lineTo(150,70);
+				ctx.lineTo(145,40);
+				ctx.closePath();
+				ctx.stroke();
+
+
+				//(x,y, radius, start angle, end angle, anticlockwise)
+				ctx.beginPath();
+				ctx.fillStyle = "rgba(100,0,0,1)"; //Fill color
+				ctx.arc(200,200, 80, 0, Math.PI*0.75, true);
+				ctx.fill();
+			}
+		}
+		</script>
 	</head>
 	<body>
 		<table border="1dp">
@@ -42,7 +94,10 @@
 			</thead>
 			<tbody>
 				<td id="PieArea" colspan="4">
-					<div id="chart1" style="height:300px; width:500px;"></div>
+					<canvas id="chart1" width="400" height="300">
+						<p>Fallback html: Sorry! HTML 5 is required. :(</p>
+					</canvas>
+					<!--<div id="chart1" style="height:300px; width:500px;"></div>-->
 				</td>
 			</tbody>
 			<tfoot>
