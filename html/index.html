@@ -3,108 +3,88 @@
 	<head>
 		<title>PhatWallet</title>
 
-		<!-- Scripts
-
-		<script language="javascript" type="text/javascript" src="../js/dist/jquery.min.js"></script>
-		<script language="javascript" type="text/javascript" src="../js/dist/jquery.jqplot.min.js"></script>
-		<link rel="stylesheet" type="text/css" href="../js/dist/jquery.jqplot.min.css">
-
-		<script type="text/javascript" src="../js/dist/plugins/jqplot.pieRenderer.min.js"></script>
-		<script type="text/javascript" src="../js/dist/plugins/jqplot.categoryAxisRenderer.min.js"></script>
-
-		<script type="text/javascript">
-			$(document).ready(function() {
-				  var data = [
-				    ['Rent', 650],['Car', 300], ['Utilities', 100]
-				  ];
-				  var plot1 = jQuery.jqplot ('chart1', [data], 
-				    { 
-				      seriesDefaults: {
-				        // Make this a pie chart.
-				        renderer: jQuery.jqplot.PieRenderer, 
-				        rendererOptions: {
-				          // Put data labels on the pie slices.
-				          // By default, labels show the percentage of the slice.
-				          showDataLabels: true
-				        }
-				      }, 
-				      legend: { show:true, location: 'e' }
-				    }
-				  );
-			});
-		</script>
-	-->
+		<script src="../js/raphael-min.js"></script>
+		<script src="../js/pie_labeler.js"></script>
+		<script src="../js/pie_renderer.js"></script>
+		<script src="../js/PhatPie.js"></script>
+		<link href="../css/main.css" rel="stylesheet" type="text/css" />
 
 		<script type="text/javascript">
 		window.onload = draw; //Executes draw function when ready
-		function draw(){
-			//Assign canvas element to variable
+
+		var main_pie = new PhatPie("Funds", 1000);
+		var paper = null;
+
+		function draw() {
+
+			// Assign canvas element to variable
 			var canvas = document.getElementById("chart1");
 
-			//Check to see if canvas is supported ins user broswer
-			if(canvas.getContext) {
-				//Create the HTML5 context object to enable draw methods
-				var ctx = canvas.getContext("2d");
+			// Create the HTML5 context object to enable draw methods
+			var ctx = canvas.getContext("2d");
 
-				//Rectangle
-				ctx.fillStyle = "rgba(0,200,0,1)"; //Fill color
-				ctx.fillRect(30,10,20,10);
+			// Creates or clears the canvas
+			if(paper == null)
+				paper = Raphael("chart2", pie_renderer.width, pie_renderer.height);
+			else
+				paper.clear();
 
-				//Line 1
-				ctx.beginPath();
-				ctx.moveTo(100,50);
-				ctx.lineTo(130,100);
-				ctx.lineTo(70,100);
-				ctx.fill();
+			// Clearing canvas
+			ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-				//Line 2
-				ctx.beginPath();
-				ctx.moveTo(72,60);
-				ctx.lineTo(85,72);
-				ctx.lineTo(71,94);
-				ctx.lineTo(50,70);
-				ctx.lineTo(65,40);
-				ctx.stroke();
+			// Drawing pie charts
+			pie_renderer.render(ctx, main_pie);
+			pie_renderer.renderSVG(paper, main_pie);
+		}
 
-				//Line 3
-				ctx.beginPath();
-				ctx.moveTo(128,60);
-				ctx.lineTo(115,72);
-				ctx.lineTo(129,94);
-				ctx.lineTo(150,70);
-				ctx.lineTo(145,40);
-				ctx.closePath();
-				ctx.stroke();
+		function onChartClick(e) {
+			var form = document.getElementById("form1");
+			var form_name = form.elements[0];
+			var form_amount = form.elements[1];
 
-
-				//(x,y, radius, start angle, end angle, anticlockwise)
-				ctx.beginPath();
-				ctx.fillStyle = "rgba(100,0,0,1)"; //Fill color
-				ctx.arc(200,200, 80, 0, Math.PI*0.75, true);
-				ctx.fill();
+			// Adds a slice if values are not empty
+			if(!(form_name.value.localeCompare("")==0 || form_amount.value.localeCompare("")==0))
+			{
+				main_pie.addSlice(new PhatPie(form_name.value, form_amount.value));
+				draw();
 			}
 		}
 		</script>
 	</head>
 	<body>
-		<table border="1dp">
+		<table border="5dp">
 			<thead>
 				<td colspan="3">PhatWallet</td>
 				<td>View</td>
 			</thead>
 			<tbody>
-				<td id="PieArea" colspan="4">
-					<canvas id="chart1" width="400" height="300">
-						<p>Fallback html: Sorry! HTML 5 is required. :(</p>
-					</canvas>
-					<!--<div id="chart1" style="height:300px; width:500px;"></div>-->
-				</td>
+				<tr>
+					<td colspan="2">CANVAS</td>
+					<td colspan="2">SVG</td>
+				</tr>
+				<tr>
+					<td id="Canvas" colspan="2">
+						<canvas id="chart1" width="500" height="400">
+							<p>Fallback html: Sorry! HTML 5 is required. :(</p>
+						</canvas>
+						<form id="form1" action="javascript: onChartClick()" method="post">
+							<textfield>Name</textfield>
+							<input value="5">Amount<input>
+							<button>Add slice</button>
+						</form>
+					</td>
+					<td id="SVG" colspan="2">
+					    <div id="chart2">
+					    	hello
+					    </div>
+					</td>
+				</tr>
 			</tbody>
 			<tfoot>
-				<td>1</td>
-				<td>2</td>
-				<td>3</td>
-				<td>4</td>
+				<td><img src="../res/black/pie/pie-48.png"/></td>
+				<td><img src="../res/black/view_details/View_Details-48.png"/></td>
+				<td><img src="../res/black/settings/settings-48.png"/></td>
+				<td><img src="../res/black/info/info-48.png"/></td>
 			</tfoot>
 		</table>
 	</body>
