@@ -1,9 +1,11 @@
+// Generates a random color using Raphael function.
 var generateColor = function() {
 	return Raphael.rgb(	(25 + Math.random()*205), 
 						(25 + Math.random()*205), 
 						(25 + Math.random()*205));
 }
 
+// A 6th degree tree.
 function PhatPie (name="NULL", value=0) {
 	
 	//Values
@@ -12,17 +14,13 @@ function PhatPie (name="NULL", value=0) {
 	this.slices = [];
 	this.name = name;
 	this.svg;
+	this.parent_slice;
 
-	//First slice does not subtract from funds
+	//First slice does not subtract from total value
 	this.slices[0] = this;
 
 	//Randomly selected color
 	this.color = generateColor();
-
-
-	this.onTouch = function () { 
-		alert(this.name + " total costs $" + this.total_value);
-	}
 }
 
 PhatPie.prototype.addSlice = function (slice) {
@@ -31,9 +29,9 @@ PhatPie.prototype.addSlice = function (slice) {
 		alert("You do not have enough funds!");
 	else if(this.slices.length > 5)
 		alert("Too many slices!");
-	else
+	else if(slice.total_value > 0)
 	{
-		this.slices.push(slice);
 		this.remaining_value -= slice.total_value;
+		this.slices.push(slice);
 	}
 }
